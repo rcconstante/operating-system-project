@@ -1,0 +1,9 @@
+build/*
+!build/.gitkeep
+*.o
+*.bin
+*.iso
+*.elf
+*.map
+.DS_Store
+Thumbs.db

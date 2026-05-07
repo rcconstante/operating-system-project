@@ -1,387 +1,298 @@
 # LaSallianOS
 
-A simple custom operating system prototype developed for the Operating Systems Final Project at De La Salle University – Dasmariñas (DLSU-D).
+LaSallianOS is a simple custom operating system prototype created for an Operating Systems final project. It demonstrates the core flow of a small x86 OS: GRUB boot, kernel initialization, VGA text output, keyboard input, command-line interaction, process management simulation, and memory management simulation.
 
-LaSallianOS demonstrates core operating system concepts including booting, kernel initialization, command-line interaction, process management simulation, and memory management simulation.
+This repository now contains the complete project structure described in the original proposal, including boot assembly, kernel modules, low-level drivers, build scripts, and step-by-step documentation.
 
 ---
 
-# Project Information
+## Project Information
 
 | Category | Details |
 |---|---|
 | Project Name | LaSallianOS |
 | Course | Operating Systems |
-| School | De La Salle University – Dasmariñas |
+| School | De La Salle University - Dasmarinas |
 | Language | C + NASM Assembly |
-| Bootloader | GRUB |
+| Bootloader | GRUB Multiboot |
 | Emulator | QEMU |
-| Architecture | x86 |
+| Architecture | 32-bit x86 |
 
 ---
 
-# Project Objectives
+## Project Objectives
 
-The main objectives of this project are:
-
-- Understand how operating systems boot
-- Learn basic kernel development
-- Implement a simple command-line interface
-- Simulate process management
-- Simulate memory management
-- Demonstrate interaction between hardware and software
+- Understand how an operating system boots.
+- Learn basic freestanding kernel development.
+- Implement VGA text mode output.
+- Implement basic keyboard input using PS/2 scancodes.
+- Build a simple command-line shell.
+- Simulate process management.
+- Simulate memory management.
+- Demonstrate interaction between hardware and software.
 
 ---
 
-# Features
+## Features
 
-## Booting Mechanism
-- Custom bootloader
-- Boots into a simple kernel
-- Displays boot messages
+### Booting Mechanism
 
-## Kernel
-- Kernel initialization
-- VGA text mode output
-- Keyboard input handling
+- GRUB-compatible Multiboot header.
+- NASM entry point in `boot/boot.asm`.
+- Kernel loaded at the 1 MB memory address.
+- Boot banner and Multiboot validation output.
 
-## Command-Line Interface
-Available commands:
+### Kernel
+
+- Kernel initialization in `kernel/kernel.c`.
+- VGA text mode output.
+- Keyboard polling and scancode translation.
+- Shell startup.
+- Simulated process and memory managers.
+
+### Command-Line Interface
 
 | Command | Description |
 |---|---|
-| help | Displays all available commands |
-| clear | Clears the screen |
-| about | Displays OS information |
-| memory | Displays simulated memory usage |
-| process | Displays running processes |
-| shutdown | Simulates system shutdown |
+| `help` | Displays all available commands |
+| `clear` | Clears the screen |
+| `about` | Displays OS information |
+| `memory` | Displays simulated memory usage |
+| `process` | Displays running simulated processes |
+| `shutdown` | Halts the system |
 
-## Process Management
-- Simulated process table
-- Displays running tasks
-- Demonstrates multitasking concepts
+### Process Management Simulation
 
-## Memory Management
-- Simulated memory allocation
-- Displays used and available memory
-- Demonstrates memory tracking concepts
+- Fixed process table.
+- Process IDs, names, states, memory usage, and tick counts.
+- Simple simulated scheduler tick each shell cycle.
+
+### Memory Management Simulation
+
+- Fixed 1024 KB simulated memory model.
+- Used and free memory calculation.
+- Block table for kernel, screen, shell, process table, and available memory.
 
 ---
 
-# Project Folder Structure
+## Project Folder Structure
 
 ```txt
 LaSallianOS/
-│
-├── boot/
-│   ├── boot.asm
-│   └── grub.cfg
-│
-├── kernel/
-│   ├── kernel.c
-│   ├── kernel.h
-│   ├── screen.c
-│   ├── screen.h
-│   ├── keyboard.c
-│   ├── keyboard.h
-│   ├── shell.c
-│   ├── shell.h
-│   ├── process.c
-│   ├── process.h
-│   ├── memory.c
-│   └── memory.h
-│
-├── drivers/
-│   ├── keyboard_driver.c
-│   └── video_driver.c
-│
-├── include/
-│   ├── types.h
-│   └── stdio.h
-│
-├── build/
-│
-├── docs/
-│   ├── documentation.md
-│   ├── screenshots/
-│   └── demo-script.txt
-│
-├── iso/
-│   └── boot/
-│       └── grub/
-│           └── grub.cfg
-│
-├── Makefile
-├── linker.ld
-├── README.md
-└── .gitignore
+|-- boot/
+|   |-- boot.asm
+|   `-- grub.cfg
+|-- kernel/
+|   |-- kernel.c
+|   |-- kernel.h
+|   |-- screen.c
+|   |-- screen.h
+|   |-- keyboard.c
+|   |-- keyboard.h
+|   |-- shell.c
+|   |-- shell.h
+|   |-- process.c
+|   |-- process.h
+|   |-- memory.c
+|   `-- memory.h
+|-- drivers/
+|   |-- keyboard_driver.c
+|   `-- video_driver.c
+|-- include/
+|   |-- types.h
+|   `-- stdio.h
+|-- build/
+|-- docs/
+|   |-- documentation.md
+|   |-- screenshots/
+|   `-- demo-script.txt
+|-- iso/
+|   `-- boot/
+|       `-- grub/
+|           `-- grub.cfg
+|-- Makefile
+|-- linker.ld
+|-- README.md
+`-- .gitignore
 ```
 
 ---
 
-# Technologies Used
+## Technologies Used
 
 | Technology | Purpose |
 |---|---|
-| C | Kernel programming |
-| NASM Assembly | Bootloader |
+| C | Freestanding kernel programming |
+| NASM Assembly | Multiboot entry point and stack setup |
 | GRUB | Boot manager |
-| QEMU | OS emulation/testing |
-| GCC | Compilation |
+| QEMU | Emulation and testing |
+| i686-elf-gcc | Cross-compiling C code |
+| i686-elf-ld | Linking the kernel |
 | Makefile | Build automation |
 
 ---
 
-# System Architecture
+## System Architecture
 
 ```txt
 +-------------------+
-|   Bootloader      |
-|  (GRUB + NASM)    |
+|       GRUB        |
+|  Multiboot Loader |
 +-------------------+
-          ↓
+          |
+          v
++-------------------+
+|    boot.asm       |
+| Stack + Entry     |
++-------------------+
+          |
+          v
 +-------------------+
 |      Kernel       |
-|   (Kernel Core)   |
+| Initialization    |
 +-------------------+
-          ↓
+          |
+          v
 +-------------------+
+|       Shell       |
 | Command Interface |
-|      Shell        |
 +-------------------+
-          ↓
+          |
+          v
 +-------------------+
-| Process Manager   |
-+-------------------+
-          ↓
-+-------------------+
-| Memory Manager    |
+| Process + Memory  |
+|   Simulations     |
 +-------------------+
 ```
 
 ---
 
-# How the System Works
+## How the System Works
 
-## 1. Boot Process
-The bootloader initializes the operating system and loads the kernel into memory.
+1. GRUB reads `grub.cfg` and loads `kernel.bin`.
+2. The Multiboot header in `boot/boot.asm` lets GRUB recognize the kernel.
+3. `boot.asm` sets up a stack and calls `kernel_main`.
+4. `kernel_main` initializes the screen, memory simulation, process simulation, keyboard, and shell.
+5. The shell prints `LaSallianOS>` and waits for typed commands.
+6. Commands call the matching module function.
 
-## 2. Kernel Initialization
-The kernel initializes:
-- Screen output
-- Keyboard input
-- Memory manager
-- Process manager
-- Command-line shell
-
-## 3. Shell Execution
-The shell waits for user commands and executes the corresponding functions.
+For a full one-by-one explanation, read [docs/documentation.md](docs/documentation.md).
 
 ---
-
-# Installation and Setup
 
 ## Requirements
 
-Install the following tools:
-
-- NASM
-- GCC
-- GRUB
-- QEMU
-- Make
-
----
-
-# Windows Setup
-
-Recommended:
-- MinGW GCC
-- NASM Installer
-- QEMU for Windows
-
----
-
-# Linux Setup
-
-Ubuntu/Debian:
+Recommended Linux or WSL packages:
 
 ```bash
 sudo apt update
-sudo apt install nasm gcc qemu grub-pc-bin xorriso make
+sudo apt install nasm qemu-system-x86 grub-pc-bin xorriso make
 ```
+
+You also need an `i686-elf` cross compiler:
+
+- `i686-elf-gcc`
+- `i686-elf-ld`
+
+GRUB rescue tooling is easiest to run from Linux or WSL.
 
 ---
 
-# Building the Operating System
-
-Run:
+## Build
 
 ```bash
 make
 ```
 
 This will:
-- Assemble the bootloader
-- Compile the kernel
-- Link the kernel
-- Generate the bootable ISO
+
+1. Assemble `boot/boot.asm`.
+2. Compile kernel and driver C files.
+3. Link `build/kernel.bin`.
+4. Copy the kernel into the ISO folder.
+5. Generate `build/LaSallianOS.iso`.
 
 ---
 
-# Running the Operating System
-
-Run using QEMU:
+## Run
 
 ```bash
-qemu-system-x86_64 -cdrom LaSallianOS.iso
+make run
+```
+
+This launches:
+
+```bash
+qemu-system-i386 -cdrom build/LaSallianOS.iso
 ```
 
 ---
 
-# Sample Output
+## Sample Output
 
 ```txt
-===========================
-      LaSallianOS v1.0
-===========================
+========================================
+          LaSallianOS v1.0
+========================================
+Boot status: GRUB loaded kernel image
+Multiboot magic: 0x2BADB002
+Multiboot info:  0xXXXXXXXX
+Multiboot check: OK
 
-System Boot Successful
+System initialization complete.
+Type 'help' to view available commands.
+LaSallianOS>
+```
 
-> help
+---
 
-Commands:
+## Demo Commands
+
+```txt
 help
-clear
 about
 memory
 process
+clear
 shutdown
 ```
 
----
-
-# Sample Commands
-
-## Help Command
-
-```txt
-> help
-```
-
-Displays all available commands.
+Use [docs/demo-script.txt](docs/demo-script.txt) for a presentation sequence.
 
 ---
 
-## Memory Command
+## Key Learning Outcomes
 
-```txt
-> memory
-```
-
-Displays simulated memory usage.
-
-Example:
-
-```txt
-Memory Used: 256 KB
-Memory Free: 768 KB
-```
+- Basic operating system architecture.
+- GRUB and Multiboot loading.
+- Freestanding C kernel structure.
+- VGA text mode hardware output.
+- Keyboard scancode input.
+- Shell command dispatch.
+- Process table simulation.
+- Memory usage simulation.
 
 ---
 
-## Process Command
+## Limitations
 
-```txt
-> process
-```
-
-Displays simulated running processes.
-
-Example:
-
-```txt
-PID   NAME
-1     shell
-2     taskA
-3     taskB
-```
+This is an educational prototype. It does not yet include real multitasking, interrupts, paging, user mode, system calls, a file system, or real dynamic memory allocation.
 
 ---
 
-# Key Learning Outcomes
+## Future Improvements
 
-Through this project, the developers learned:
-
-- Basic operating system architecture
-- Bootloader development
-- Kernel initialization
-- Hardware interaction
-- Memory management concepts
-- Process scheduling concepts
-- Command-line implementation
-
----
-
-# Challenges Encountered
-
-Some challenges encountered during development include:
-
-- Bootloader debugging
-- Keyboard input handling
-- Memory addressing
-- Linking kernel binaries
-- Emulator configuration
+1. Add GDT setup.
+2. Add IDT setup.
+3. Replace keyboard polling with interrupts.
+4. Add timer interrupts.
+5. Add real scheduler ticks.
+6. Add a physical memory bitmap allocator.
+7. Add a RAM-backed file system.
+8. Add user login and command history.
 
 ---
 
-# Future Improvements
+## License
 
-Possible future improvements:
-
-- File system simulation
-- Graphical user interface
-- Real multitasking
-- Dynamic memory allocation
-- Mouse support
-- Networking support
-- File explorer
-- User login system
-
----
-
-# Researchers / Developers
-
-| Name | Role |
-|---|---|
-| Your Name Here | Developer |
-| Member 2 | Developer |
-| Member 3 | Developer |
-
----
-
-# Course Requirement
-
-This project was developed as part of the Operating Systems Final Project requirement for:
-
-**College of Information and Computer Studies**  
-De La Salle University – Dasmariñas
-
----
-
-# License
-
-This project is intended for educational purposes only.
-
----
-
-# Acknowledgements
-
-Special thanks to:
-- Operating Systems Professor
-- DLSU-D College of Information and Computer Studies
-- Open-source OS development communities
-- QEMU and GRUB documentation contributors
-
----
+This project is intended for educational use.
