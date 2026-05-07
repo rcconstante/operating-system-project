@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DLSUDos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="boot-screen"><div id="boot-text"></div></div>
+  <div id="desktop" style="display:none;">
+    <div id="taskbar">
+      <span>DLSUDos v1.0</span><span id="clock"></span>
+    </div>
+    <div id="terminal">
+      <div id="output"></div>
+      <div id="input-line">
+        <span>DLSUDos&gt; </span>
+        <input id="cmd-input" type="text" autofocus />
+      </div>
+    </div>
+  </div>
+
+  <script src="memory.js"></script>
+  <script src="processes.js"></script>
+  <script src="shell.js"></script>
+  <script src="kernel.js"></script>
+</body>
+</html>
