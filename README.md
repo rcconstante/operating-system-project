@@ -1,298 +1,168 @@
-# LaSallianOS
+# DLSUDos
 
-LaSallianOS is a simple custom operating system prototype created for an Operating Systems final project. It demonstrates the core flow of a small x86 OS: GRUB boot, kernel initialization, VGA text output, keyboard input, command-line interaction, process management simulation, and memory management simulation.
+**DE LA SALLE UNIVERSITY – DASMARIÑAS (DLSU-D)**  
+College of Information and Computer Studies  
+Operating Systems — Final Project
 
-This repository now contains the complete project structure described in the original proposal, including boot assembly, kernel modules, low-level drivers, build scripts, and step-by-step documentation.
+---
+
+DLSUDos is a browser-based operating system simulation built entirely in HTML, CSS, and JavaScript — no installation required. It covers all rubric requirements including a boot sequence, kernel simulation, command-line interface, process management, and memory management. Type `boot os` in the terminal to launch a full Windows-style GUI desktop with draggable icons, resizable windows, a Tic-Tac-Toe game, and a background color picker.
 
 ---
 
 ## Project Information
 
-| Category | Details |
-|---|---|
-| Project Name | LaSallianOS |
-| Course | Operating Systems |
-| School | De La Salle University - Dasmarinas |
-| Language | C + NASM Assembly |
-| Bootloader | GRUB Multiboot |
-| Emulator | QEMU |
-| Architecture | 32-bit x86 |
-
----
-
-## Project Objectives
-
-- Understand how an operating system boots.
-- Learn basic freestanding kernel development.
-- Implement VGA text mode output.
-- Implement basic keyboard input using PS/2 scancodes.
-- Build a simple command-line shell.
-- Simulate process management.
-- Simulate memory management.
-- Demonstrate interaction between hardware and software.
+| Category        | Details                             |
+| --------------- | ----------------------------------- |
+| Project Name    | DLSUDos                             |
+| Course          | Operating Systems                   |
+| School          | De La Salle University – Dasmariñas |
+| Language        | HTML, CSS, JavaScript               |
+| Platform        | Browser — no installation needed    |
+| Hosting         | GitHub Pages                        |
+| Version Control | GitHub — one branch per member      |
 
 ---
 
 ## Features
 
-### Booting Mechanism
+### Booting Mechanism _(15 pts)_
 
-- GRUB-compatible Multiboot header.
-- NASM entry point in `boot/boot.asm`.
-- Kernel loaded at the 1 MB memory address.
-- Boot banner and Multiboot validation output.
+- Animated boot screen with sequential `[OK]` initialization messages.
+- Simulates kernel load, memory init, process manager start, and shell launch.
+- Transitions to the terminal desktop after boot completes.
 
-### Kernel
+### Kernel Implementation _(20 pts)_
 
-- Kernel initialization in `kernel/kernel.c`.
-- VGA text mode output.
-- Keyboard polling and scancode translation.
-- Shell startup.
-- Simulated process and memory managers.
+- `kernel.js` handles the full boot sequence and subsystem initialization.
+- Calls `initMemory()`, `initProcesses()`, and `startClock()` on load.
+- Live clock displayed in the terminal taskbar.
 
-### Command-Line Interface
+### Command-Line Interface _(15 pts)_
 
-| Command | Description |
-|---|---|
-| `help` | Displays all available commands |
-| `clear` | Clears the screen |
-| `about` | Displays OS information |
-| `memory` | Displays simulated memory usage |
-| `process` | Displays running simulated processes |
-| `shutdown` | Halts the system |
+| Command       | Description                                |
+| ------------- | ------------------------------------------ |
+| `help`        | Displays all available commands            |
+| `clear`       | Clears the terminal output                 |
+| `ps`          | Lists all simulated running processes      |
+| `kill <pid>`  | Terminates a simulated process by PID      |
+| `mem`         | Displays memory usage with a visual bar    |
+| `date`        | Prints the current date and time           |
+| `echo <text>` | Prints text to the terminal                |
+| `boot os`     | Launches the GUI desktop _(bonus feature)_ |
+| `exit`        | Shuts down and reloads the OS              |
 
-### Process Management Simulation
+### Process Management Simulation _(15 pts)_
 
-- Fixed process table.
-- Process IDs, names, states, memory usage, and tick counts.
-- Simple simulated scheduler tick each shell cycle.
+- Fixed process table with PID, name, status, and memory usage.
+- `ps` displays a formatted table of all running processes.
+- `kill <pid>` removes a user process from the table.
+- System processes (kernel, shell) are protected and cannot be killed.
 
-### Memory Management Simulation
+### Memory Management Simulation _(10 pts)_
 
 - Fixed 1024 KB simulated memory model.
-- Used and free memory calculation.
-- Block table for kernel, screen, shell, process table, and available memory.
+- `mem` displays total, used, and free memory in KB.
+- ASCII progress bar showing memory usage percentage.
+
+### Advanced Features _(10 pts)_
+
+- Live clock in the taskbar updating every second.
+- `kill` command with PID validation and error handling.
+- `echo` command for terminal text output.
+- `boot os` command launching a full GUI desktop environment.
 
 ---
 
-## Project Folder Structure
+## Project File Structure
 
-```txt
-LaSallianOS/
-|-- boot/
-|   |-- boot.asm
-|   `-- grub.cfg
-|-- kernel/
-|   |-- kernel.c
-|   |-- kernel.h
-|   |-- screen.c
-|   |-- screen.h
-|   |-- keyboard.c
-|   |-- keyboard.h
-|   |-- shell.c
-|   |-- shell.h
-|   |-- process.c
-|   |-- process.h
-|   |-- memory.c
-|   `-- memory.h
-|-- drivers/
-|   |-- keyboard_driver.c
-|   `-- video_driver.c
-|-- include/
-|   |-- types.h
-|   `-- stdio.h
-|-- build/
-|-- docs/
-|   |-- documentation.md
-|   |-- screenshots/
-|   `-- demo-script.txt
-|-- iso/
-|   `-- boot/
-|       `-- grub/
-|           `-- grub.cfg
-|-- Makefile
-|-- linker.ld
-|-- README.md
-`-- .gitignore
+```
+DLSUDos/
+├── index.html       ← Main page and GUI layout          (Member 1 & 5)
+├── style.css        ← All styling — terminal + desktop  (Member 5)
+├── kernel.js        ← Boot sequence and clock           (Member 1)
+├── shell.js         ← Command interpreter               (Member 2)
+├── processes.js     ← Process management simulation     (Member 3)
+├── memory.js        ← Memory management simulation      (Member 4)
+├── desktop.js       ← GUI desktop, windows, apps        (Member 5)
+├── dlsud.png        ← DLSUD logo (desktop watermark)
+└── README.md        ← Documentation                     (Member 5)
 ```
 
 ---
 
-## Technologies Used
+## How to Run
 
-| Technology | Purpose |
-|---|---|
-| C | Freestanding kernel programming |
-| NASM Assembly | Multiboot entry point and stack setup |
-| GRUB | Boot manager |
-| QEMU | Emulation and testing |
-| i686-elf-gcc | Cross-compiling C code |
-| i686-elf-ld | Linking the kernel |
-| Makefile | Build automation |
+No build tools or installations required.
+
+1. Clone or download this repository.
+2. Open `index.html` in any modern browser (Chrome or Firefox recommended).
+3. Watch the boot sequence complete.
+4. Type commands in the terminal, or type `boot os` to launch the GUI desktop.
+
+**Live on GitHub Pages:** `https://yourusername.github.io/dlsudos`
 
 ---
 
 ## System Architecture
 
-```txt
+```
 +-------------------+
-|       GRUB        |
-|  Multiboot Loader |
+|   Boot Sequence   |
+|   (kernel.js)     |
 +-------------------+
           |
           v
 +-------------------+
-|    boot.asm       |
-| Stack + Entry     |
+|  Terminal Shell   |
+|   (shell.js)      |
++-------------------+
+     |         |
+     v         v
++--------+ +--------+
+|Process | |Memory  |
+|Manager | |Manager |
++--------+ +--------+
+          |
+       boot os
+          |
+          v
++-------------------+
+|   GUI Desktop     |
+|   (desktop.js)    |
 +-------------------+
           |
           v
 +-------------------+
-|      Kernel       |
-| Initialization    |
+| Windows / Apps /  |
+| Tic-Tac-Toe       |
 +-------------------+
-          |
-          v
-+-------------------+
-|       Shell       |
-| Command Interface |
-+-------------------+
-          |
-          v
-+-------------------+
-| Process + Memory  |
-|   Simulations     |
-+-------------------+
-```
-
----
-
-## How the System Works
-
-1. GRUB reads `grub.cfg` and loads `kernel.bin`.
-2. The Multiboot header in `boot/boot.asm` lets GRUB recognize the kernel.
-3. `boot.asm` sets up a stack and calls `kernel_main`.
-4. `kernel_main` initializes the screen, memory simulation, process simulation, keyboard, and shell.
-5. The shell prints `LaSallianOS>` and waits for typed commands.
-6. Commands call the matching module function.
-
-For a full one-by-one explanation, read [docs/documentation.md](docs/documentation.md).
-
----
-
-## Requirements
-
-Recommended Linux or WSL packages:
-
-```bash
-sudo apt update
-sudo apt install nasm qemu-system-x86 grub-pc-bin xorriso make
-```
-
-You also need an `i686-elf` cross compiler:
-
-- `i686-elf-gcc`
-- `i686-elf-ld`
-
-GRUB rescue tooling is easiest to run from Linux or WSL.
-
----
-
-## Build
-
-```bash
-make
-```
-
-This will:
-
-1. Assemble `boot/boot.asm`.
-2. Compile kernel and driver C files.
-3. Link `build/kernel.bin`.
-4. Copy the kernel into the ISO folder.
-5. Generate `build/LaSallianOS.iso`.
-
----
-
-## Run
-
-```bash
-make run
-```
-
-This launches:
-
-```bash
-qemu-system-i386 -cdrom build/LaSallianOS.iso
-```
-
----
-
-## Sample Output
-
-```txt
-========================================
-          LaSallianOS v1.0
-========================================
-Boot status: GRUB loaded kernel image
-Multiboot magic: 0x2BADB002
-Multiboot info:  0xXXXXXXXX
-Multiboot check: OK
-
-System initialization complete.
-Type 'help' to view available commands.
-LaSallianOS>
 ```
 
 ---
 
 ## Demo Commands
 
-```txt
-help
-about
-memory
-process
-clear
-shutdown
 ```
-
-Use [docs/demo-script.txt](docs/demo-script.txt) for a presentation sequence.
-
----
-
-## Key Learning Outcomes
-
-- Basic operating system architecture.
-- GRUB and Multiboot loading.
-- Freestanding C kernel structure.
-- VGA text mode hardware output.
-- Keyboard scancode input.
-- Shell command dispatch.
-- Process table simulation.
-- Memory usage simulation.
+help
+ps
+kill 3
+mem
+date
+echo Hello, DLSUDos!
+boot os
+clear
+exit
+```
 
 ---
 
 ## Limitations
 
-This is an educational prototype. It does not yet include real multitasking, interrupts, paging, user mode, system calls, a file system, or real dynamic memory allocation.
-
----
-
-## Future Improvements
-
-1. Add GDT setup.
-2. Add IDT setup.
-3. Replace keyboard polling with interrupts.
-4. Add timer interrupts.
-5. Add real scheduler ticks.
-6. Add a physical memory bitmap allocator.
-7. Add a RAM-backed file system.
-8. Add user login and command history.
+This is an educational prototype. It does not include real multitasking, actual memory allocation, a file system, persistent storage, or true hardware interaction. All process and memory data is simulated in-memory at runtime and resets on page reload.
 
 ---
 
 ## License
 
-This project is intended for educational use.
+This project is intended for educational use at De La Salle University – Dasmariñas.
