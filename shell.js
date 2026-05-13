@@ -11,8 +11,8 @@ document.getElementById("cmd-input")
 function handleCommand(cmd) {
   const parts = cmd.split(" ");
   switch(parts[0]) {
-    case "help":  
-      printOutput("Available commands: help, clear, ps, kill &lt;pid&gt;, mem, date, echo &lt;text&gt;, exit"); 
+    case "help":
+      printOutput("Available commands: help, clear, ps, kill &lt;pid&gt;, mem, date, echo &lt;text&gt;, exit, boot os");
       break;
     case "clear": document.getElementById("output").innerHTML = ""; break;
     case "ps":    showProcesses(); break;
@@ -20,6 +20,17 @@ function handleCommand(cmd) {
     case "mem":   showMemory(); break;
     case "date":  printOutput(new Date().toString()); break;
     case "echo":  printOutput(parts.slice(1).join(" ")); break;
+    case "boot":
+      if (parts[1] === "os") {
+        printOutput("[OK] Launching GUI desktop...");
+        setTimeout(() => {
+          document.getElementById('desktop').style.display = 'none';
+          GUI.boot();
+        }, 600);
+      } else {
+        printOutput("Usage: boot os");
+      }
+      break;
     case "exit":
       printOutput("Shutting down... Goodbye!");
       setTimeout(() => location.reload(), 1500); break;
@@ -31,5 +42,5 @@ function handleCommand(cmd) {
 function printOutput(text) {
   const out = document.getElementById("output");
   out.innerHTML += "<div>" + text + "</div>";
-  out.scrollTop = out.scrollHeight; // Auto-scroll to bottom
+  out.scrollTop = out.scrollHeight;
 }

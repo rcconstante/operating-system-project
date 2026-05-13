@@ -8,6 +8,8 @@
 </head>
 <body>
   <div id="boot-screen"><div id="boot-text"></div></div>
+
+  <!-- Terminal desktop -->
   <div id="desktop" style="display:none;">
     <div id="taskbar">
       <span>DLSUDos v1.0</span><span id="clock"></span>
@@ -21,9 +23,63 @@
     </div>
   </div>
 
+  <!-- GUI desktop overlay -->
+  <div id="gui-desktop" style="display:none;">
+    <div id="gui-desktop-area">
+      <img id="desktop-logo" src="dlsud.png" alt="DLSUD Logo">
+    </div>
+    <div id="gui-taskbar">
+      <button id="start-btn">&#9654; Start</button>
+      <div id="taskbar-windows"></div>
+      <button id="color-btn" title="Change background">🎨</button>
+      <div id="gui-clock"></div>
+    </div>
+  </div>
+
+  <!-- Color picker panel -->
+  <div id="color-picker">
+    <div class="cp-swatch" style="background:#3b82f6" onclick="GUI.setBg('#3b82f6')" title="Blue"></div>
+    <div class="cp-swatch" style="background:#10b981" onclick="GUI.setBg('#10b981')" title="Green"></div>
+    <div class="cp-swatch" style="background:#8b5cf6" onclick="GUI.setBg('#8b5cf6')" title="Purple"></div>
+    <div class="cp-swatch" style="background:#f59e0b" onclick="GUI.setBg('#f59e0b')" title="Amber"></div>
+    <div class="cp-swatch" style="background:#ef4444" onclick="GUI.setBg('#ef4444')" title="Red"></div>
+    <div class="cp-swatch" style="background:#ec4899" onclick="GUI.setBg('#ec4899')" title="Pink"></div>
+    <div class="cp-swatch" style="background:#0f172a" onclick="GUI.setBg('#0f172a')" title="Dark"></div>
+    <div class="cp-swatch" style="background:#475569" onclick="GUI.setBg('#475569')" title="Slate"></div>
+    <div class="cp-swatch" style="background:#0ea5e9" onclick="GUI.setBg('#0ea5e9')" title="Sky"></div>
+    <div class="cp-swatch" style="background:#14b8a6" onclick="GUI.setBg('#14b8a6')" title="Teal"></div>
+    <div class="cp-swatch" style="background:#f97316" onclick="GUI.setBg('#f97316')" title="Orange"></div>
+    <div class="cp-swatch" style="background:#6b7280" onclick="GUI.setBg('#6b7280')" title="Gray"></div>
+  </div>
+
+  <!-- Start menu -->
+  <div id="start-menu">
+    <div class="start-header">DLSUDos</div>
+    <div class="start-item" onclick="GUI.openApp('computer')">🖥️ My Computer</div>
+    <div class="start-item" onclick="GUI.openApp('documents')">📁 Documents</div>
+    <div class="start-item" onclick="GUI.openApp('notepad')">📝 Notepad</div>
+    <div class="start-item" onclick="GUI.openApp('ttt')">⭕ Tic-Tac-Toe</div>
+    <div class="start-item" onclick="GUI.openApp('recycle')">🗑️ Recycle Bin</div>
+    <div class="start-sep"></div>
+    <div class="start-item" onclick="document.getElementById('gui-desktop').style.display='none';document.getElementById('desktop').style.display='block';document.getElementById('cmd-input').focus()">
+      💻 Back to Terminal
+    </div>
+    <div class="start-item" onclick="location.reload()">⏻ Shut Down</div>
+  </div>
+
+  <!-- Right-click context menu -->
+  <div id="context-menu">
+    <div class="ctx-item" onclick="GUI.openApp('documents')">📁 Open Documents</div>
+    <div class="ctx-item" onclick="GUI.openApp('notepad')">📝 New Text Document</div>
+    <div class="ctx-item" onclick="GUI.openApp('ttt')">⭕ Play Tic-Tac-Toe</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="document.getElementById('color-btn').click()">🎨 Change Background</div>
+  </div>
+
   <script src="memory.js"></script>
   <script src="processes.js"></script>
   <script src="shell.js"></script>
   <script src="kernel.js"></script>
+  <script src="desktop.js"></script>
 </body>
 </html>
