@@ -9,15 +9,36 @@ function initProcesses() {
 }
 
 function showProcesses() {
-  let table = "PID   NAME        STATUS      MEM<br>";
+  let table = "PID&nbsp;&nbsp;&nbsp;NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEM<br>";
+  table += "─".repeat(44) + "<br>";
+
   processes.forEach(p => {
-    table += p.pid + "     " + p.name.padEnd(10, "&nbsp;") + " " +
-             p.status.padEnd(10, "&nbsp;") + " " + p.memory + "KB<br>";
+    table += p.pid + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+             p.name.padEnd(14, " ") +
+             p.status.padEnd(11, " ") +
+             p.memory + "KB<br>";
   });
+
+  if (typeof GUI !== "undefined") {
+    Object.entries(GUI.windowPids).forEach(([pid, winId]) => {
+      const win = GUI.windows[winId];
+      if (!win) return;
+      const name = win.title.toLowerCase().replace(/\s+/g, "-").padEnd(14, " ");
+      table += pid + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + name + "running&nbsp;&nbsp;&nbsp;&nbsp;" + "--<br>";
+    });
+  }
+
   printOutput(table);
 }
 
 function killProcess(pid) {
+  if (typeof GUI !== "undefined" && GUI.windowPids[pid]) {
+    const winId = GUI.windowPids[pid];
+    const name = GUI.windows[winId] ? GUI.windows[winId].title : "app";
+    GUI.closeWindow(winId);
+    printOutput("Killed: " + name + " (PID " + pid + ")");
+    return;
+  }
   if (pid === 1 || pid === 2) {
     printOutput("Cannot kill system process.");
     return;

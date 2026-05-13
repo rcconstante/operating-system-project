@@ -1,5 +1,6 @@
 const GUI = {
   windows: {}, nextId: 1, topZ: 100, startTime: Date.now(),
+  windowPids: {}, nextPid: 10,
 
   boot() {
     document.getElementById('gui-desktop').style.display = 'flex';
@@ -163,7 +164,9 @@ const GUI = {
       <div class="window-body">${content}</div>`;
 
     area.appendChild(win);
-    this.windows[id] = { title, icon };
+    const pid = this.nextPid++;
+    this.windows[id] = { title, icon, pid };
+    this.windowPids[pid] = id;
     this.makeDraggable(win);
     this.makeResizable(win);
     win.querySelector('.wclose').onclick = () => this.closeWindow(id);
@@ -183,7 +186,10 @@ const GUI = {
 
   closeWindow(id) {
     document.getElementById(id)?.remove();
-    delete this.windows[id];
+    if (this.windows[id]) {
+      delete this.windowPids[this.windows[id].pid];
+      delete this.windows[id];
+    }
     document.querySelector(`.taskbar-btn[data-id="${id}"]`)?.remove();
   },
 
