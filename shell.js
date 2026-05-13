@@ -12,11 +12,25 @@ function handleCommand(cmd) {
   const parts = cmd.split(" ");
   switch(parts[0]) {
     case "help":
-      printOutput("Available commands: help, clear, ps, kill &lt;pid&gt;, mem, date, echo &lt;text&gt;, exit, boot os");
+      printOutput("Available commands: help, clear, ps, kill &lt;name|pid&gt;, mem, date, echo &lt;text&gt;, boot os, exit");
       break;
     case "clear": document.getElementById("output").innerHTML = ""; break;
     case "ps":    showProcesses(); break;
-    case "kill":  killProcess(parseInt(parts[1])); break;
+    case "kill": {
+      var killArg = parts.slice(1).join(" ");
+      if (!killArg) { printOutput("Usage: kill &lt;app-name&gt; or kill &lt;pid&gt;"); break; }
+      if (!isNaN(killArg) && parts.length === 2) {
+        killProcess(parseInt(killArg));
+      } else {
+        var killName = killArg.replace(/-/g, " ");
+        if (typeof GUI !== "undefined" && GUI.killByName(killName)) {
+          printOutput("Closed: " + killName);
+        } else {
+          printOutput("No app found: " + killArg + ". Use ps to list processes.");
+        }
+      }
+      break;
+    }
     case "mem":   showMemory(); break;
     case "date":  printOutput(new Date().toString()); break;
     case "echo":  printOutput(parts.slice(1).join(" ")); break;

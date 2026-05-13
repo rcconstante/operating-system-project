@@ -13,6 +13,8 @@ const GUI = {
       { label: 'My Computer', icon: '🖥️', type: 'computer'  },
       { label: 'Documents',   icon: '📁', type: 'documents' },
       { label: 'Notepad',     icon: '📝', type: 'notepad'   },
+      { label: 'Terminal',    icon: '⬛', type: 'terminal'  },
+      { label: 'Browser',     icon: '🌐', type: 'browser'   },
       { label: 'Tic-Tac-Toe',icon: '⭕',  type: 'ttt'       },
       { label: 'Recycle Bin', icon: '🗑️', type: 'recycle'   },
     ];
@@ -104,6 +106,18 @@ const GUI = {
     });
   },
 
+  killByName(name) {
+    const q = name.toLowerCase().replace(/-/g, ' ').trim();
+    for (const id in this.windows) {
+      const title = this.windows[id].title.toLowerCase();
+      if (title === q || title.startsWith(q) || title.includes(q)) {
+        this.closeWindow(id);
+        return true;
+      }
+    }
+    return false;
+  },
+
   setBg(color) {
     document.getElementById('gui-desktop').style.background = color;
     document.getElementById('color-picker').style.display = 'none';
@@ -112,11 +126,13 @@ const GUI = {
   openApp(type) {
     document.getElementById('start-menu').style.display = 'none';
     const map = {
-      computer:  ['My Computer', '🖥️', this.computerContent(), { w: 440, h: 300 }],
-      documents: ['Documents',   '📁', this.docsContent(),     { w: 460, h: 320 }],
-      recycle:   ['Recycle Bin', '🗑️', this.recycleContent(),  { w: 380, h: 240 }],
-      notepad:   ['Notepad',     '📝', this.notepadContent(),  { w: 460, h: 340 }],
-      ttt:       ['Tic-Tac-Toe', '⭕', this.tttContent(),      { w: 280, h: 340 }],
+      computer:  ['My Computer', '🖥️', this.computerContent(),  { w: 440, h: 300 }],
+      documents: ['Documents',   '📁', this.docsContent(),      { w: 460, h: 320 }],
+      recycle:   ['Recycle Bin', '🗑️', this.recycleContent(),   { w: 380, h: 240 }],
+      notepad:   ['Notepad',     '📝', this.notepadContent(),   { w: 460, h: 340 }],
+      ttt:       ['Tic-Tac-Toe', '⭕', this.tttContent(),       { w: 280, h: 340 }],
+      terminal:  ['Terminal',    '⬛', this.terminalContent(),  { w: 520, h: 360 }],
+      browser:   ['Browser',    '🌐', this.browserContent(),   { w: 680, h: 480 }],
     };
     const args = map[type];
     if (args) this.createWindow(...args);
@@ -286,6 +302,109 @@ const GUI = {
   },
 
   resetTTT(gid) { this.initTTT(gid); },
+
+  browserContent: () => `
+    <div class="win-browser">
+      <div class="browser-bar">
+        <span class="browser-dot" style="background:#ef4444"></span>
+        <span class="browser-dot" style="background:#f59e0b"></span>
+        <span class="browser-dot" style="background:#22c55e"></span>
+        <input class="browser-addr" value="https://dlsud.edu20.org" readonly>
+        <button class="browser-go" onclick="this.closest('.win-browser').querySelector('iframe').src='https://dlsud.edu20.org'">↻</button>
+      </div>
+      <iframe class="browser-frame" src="https://dlsud.edu20.org" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      <div class="browser-blocked">
+        <div style="font-size:40px">🌐</div>
+        <div style="margin-top:10px;font-weight:bold">Cannot display page</div>
+        <div style="margin-top:6px;font-size:12px;color:#64748b">This site blocks embedding. Open it directly:</div>
+        <a href="https://dlsud.edu20.org" target="_blank" style="margin-top:10px;display:inline-block;background:#2563eb;color:#fff;padding:6px 18px;font-size:13px;text-decoration:none;">Open in New Tab</a>
+      </div>
+    </div>`,
+
+  _withOutput(targetEl, fn) {
+    const real = document.getElementById('output');
+    const proxy = { innerHTML: '', scrollTop: 0, scrollHeight: 0 };
+    Object.defineProperty(document, '_termProxy', { value: targetEl, configurable: true });
+    const orig = window.printOutput;
+    window.printOutput = text => {
+      targetEl.innerHTML += `<div>${text}</div>`;
+      targetEl.scrollTop = targetEl.scrollHeight;
+    };
+    fn();
+    window.printOutput = orig;
+  },
+
+  terminalContent() {
+    const tid = 'term' + Date.now();
+    setTimeout(() => this.initTerminalWindow(tid), 0);
+    return `
+      <div class="win-term" id="${tid}">
+        <div class="win-term-output" id="${tid}-out"></div>
+        <div class="win-term-input-row">
+          <span class="win-term-prompt">DLSUDos&gt;</span>
+          <input class="win-term-input" id="${tid}-in" type="text" autocomplete="off" spellcheck="false">
+        </div>
+      </div>`;
+  },
+
+  initTerminalWindow(tid) {
+    const input = document.getElementById(tid + '-in');
+    const out   = document.getElementById(tid + '-out');
+    if (!input || !out) return;
+
+    const print = text => {
+      out.innerHTML += `<div>${text}</div>`;
+      out.scrollTop = out.scrollHeight;
+    };
+
+    print('<span style="color:#00ff00">DLSUDos Terminal — type <b>help</b> for commands.</span>');
+
+    input.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const cmd = input.value.trim();
+      input.value = '';
+      if (!cmd) return;
+      print(`<span style="color:#00ff00">DLSUDos&gt; ${cmd}</span>`);
+      const parts = cmd.split(' ');
+      switch (parts[0]) {
+        case 'help':
+          print('Commands: help, clear, ps, kill &lt;pid&gt;, mem, date, echo &lt;text&gt;, exit'); break;
+        case 'clear':
+          out.innerHTML = ''; break;
+        case 'ps':
+          this._withOutput(out, () => showProcesses()); break;
+        case 'kill': {
+          var kArg = parts.slice(1).join(' ');
+          if (!kArg) { print('Usage: kill &lt;app-name&gt; or kill &lt;pid&gt;'); break; }
+          if (!isNaN(kArg) && parts.length === 2) {
+            this._withOutput(out, () => killProcess(parseInt(kArg)));
+          } else {
+            var kName = kArg.replace(/-/g, ' ');
+            if (this.killByName(kName)) { print('Closed: ' + kName); }
+            else { print('No app found: ' + kArg); }
+          }
+          break;
+        }
+        case 'mem':
+          this._withOutput(out, () => showMemory()); break;
+        case 'date':
+          print(new Date().toString()); break;
+        case 'echo':
+          print(parts.slice(1).join(' ')); break;
+        case 'exit':
+          print('Closing terminal...');
+          setTimeout(() => {
+            const win = input.closest('.gui-window');
+            if (win) win.querySelector('.wclose').click();
+          }, 600);
+          break;
+        default:
+          print(`Command not found: ${cmd}`);
+      }
+    });
+
+    input.focus();
+  },
 
   tttMove(gid, i) {
     const st = window['_ttt' + gid];
