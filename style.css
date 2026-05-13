@@ -9,7 +9,7 @@ body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; 
 #cmd-input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 16px; flex: 1; outline: none; }
 
 /* ── GUI Desktop ──────────────────────────────────────────────────── */
-#gui-desktop { position: fixed; inset: 0; flex-direction: column; background: #3b82f6; font-family: system-ui, Arial, sans-serif; z-index: 9000; overflow: hidden; user-select: none; }
+#gui-desktop { position: fixed; inset: 0; flex-direction: column; background: #c08081; font-family: system-ui, Arial, sans-serif; z-index: 9000; overflow: hidden; user-select: none; }
 #gui-desktop-area { flex: 1; position: relative; overflow: hidden; }
 #desktop-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; opacity: 0.15; pointer-events: none; user-select: none; }
 
