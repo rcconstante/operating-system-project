@@ -24,21 +24,7 @@ DLSUDos is a browser-based operating system simulation built entirely in HTML, C
 
 ---
 
-## Features
-
-### Booting Mechanism _(15 pts)_
-
-- Animated boot screen with sequential `[OK]` initialization messages.
-- Simulates kernel load, memory init, process manager start, and shell launch.
-- Transitions to the terminal desktop after boot completes.
-
-### Kernel Implementation _(20 pts)_
-
-- `kernel.js` handles the full boot sequence and subsystem initialization.
-- Calls `initMemory()`, `initProcesses()`, and `startClock()` on load.
-- Live clock displayed in the terminal taskbar.
-
-### Command-Line Interface _(15 pts)_
+### Command-Line Interface
 
 | Command       | Description                                |
 | ------------- | ------------------------------------------ |
@@ -52,41 +38,21 @@ DLSUDos is a browser-based operating system simulation built entirely in HTML, C
 | `boot os`     | Launches the GUI desktop _(bonus feature)_ |
 | `exit`        | Shuts down and reloads the OS              |
 
-### Process Management Simulation _(15 pts)_
-
-- Fixed process table with PID, name, status, and memory usage.
-- `ps` displays a formatted table of all running processes.
-- `kill <pid>` removes a user process from the table.
-- System processes (kernel, shell) are protected and cannot be killed.
-
-### Memory Management Simulation _(10 pts)_
-
-- Fixed 1024 KB simulated memory model.
-- `mem` displays total, used, and free memory in KB.
-- ASCII progress bar showing memory usage percentage.
-
-### Advanced Features _(10 pts)_
-
-- Live clock in the taskbar updating every second.
-- `kill` command with PID validation and error handling.
-- `echo` command for terminal text output.
-- `boot os` command launching a full GUI desktop environment.
-
 ---
 
 ## Project File Structure
 
 ```
 DLSUDos/
-├── index.html       ← Main page and GUI layout          (Member 1 & 5)
-├── style.css        ← All styling — terminal + desktop  (Member 5)
-├── kernel.js        ← Boot sequence and clock           (Member 1)
-├── shell.js         ← Command interpreter               (Member 2)
-├── processes.js     ← Process management simulation     (Member 3)
-├── memory.js        ← Memory management simulation      (Member 4)
-├── desktop.js       ← GUI desktop, windows, apps        (Member 5)
+├── index.html       ← Main page and GUI layout
+├── style.css        ← All styling — terminal + desktop
+├── kernel.js        ← Boot sequence and clock
+├── shell.js         ← Command interpreter
+├── processes.js     ← Process management simulation
+├── memory.js        ← Memory management simulation
+├── desktop.js       ← GUI desktop, windows, apps
 ├── dlsud.png        ← DLSUD logo (desktop watermark)
-└── README.md        ← Documentation                     (Member 5)
+└── README.md        ← Documentation
 ```
 
 ---
