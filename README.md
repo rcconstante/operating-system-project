@@ -1,4 +1,4 @@
-# DLSUDos
+# LasallianOS
 
 **DE LA SALLE UNIVERSITY – DASMARIÑAS (DLSU-D)**  
 College of Information and Computer Studies  
