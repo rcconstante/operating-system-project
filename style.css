@@ -3,10 +3,18 @@ body { background: #000; color: #00ff00; font-family: 'Courier New', monospace; 
 
 /* ── Terminal ─────────────────────────────────────────────────────── */
 #boot-screen { padding: 40px; font-size: 16px; line-height: 2; }
-#taskbar { background: #111; padding: 8px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid #00ff00; }
-#terminal { margin: 20px auto; width: 90%; max-width: 800px; background: #0a0a0a; border: 1px solid #00ff00; border-radius: 8px; padding: 16px; height: 80vh; display: flex; flex-direction: column; }
-#output { flex: 1; overflow-y: auto; margin-bottom: 10px; line-height: 1.8; }
-#cmd-input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 16px; flex: 1; outline: none; }
+#desktop { display: flex; flex-direction: column; height: 100vh; background: #000; }
+#taskbar { background: #111; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00ff00; font-size: 13px; letter-spacing: 1px; flex-shrink: 0; }
+#terminal-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+#terminal { width: 68%; max-width: 820px; background: #050505; border: 1px solid #00ff00; padding: 0; height: 62vh; display: flex; flex-direction: column; position: relative; }
+#terminal::before { content: '[ DLSUDos Terminal v1.0 ]'; display: block; background: #00ff00; color: #000; font-size: 12px; font-weight: bold; letter-spacing: 2px; text-align: center; padding: 5px 0; flex-shrink: 0; }
+#output { flex: 1; overflow-y: auto; margin-bottom: 0; line-height: 1.8; padding: 14px 20px; font-size: 14px; }
+#output::-webkit-scrollbar { width: 6px; }
+#output::-webkit-scrollbar-track { background: #0a0a0a; }
+#output::-webkit-scrollbar-thumb { background: #00ff00; }
+#output::-webkit-scrollbar-thumb:hover { background: #00cc00; }
+#input-line { display: flex; align-items: center; border-top: 1px solid #003300; padding: 10px 20px; background: #0a0a0a; flex-shrink: 0; }
+#cmd-input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 14px; flex: 1; outline: none; }
 
 /* ── GUI Desktop ──────────────────────────────────────────────────── */
 #gui-desktop { position: fixed; inset: 0; flex-direction: column; background: #0f172a; font-family: system-ui, Arial, sans-serif; z-index: 9000; overflow: hidden; user-select: none; }
